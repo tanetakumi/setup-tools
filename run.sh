@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # root ユーザでの実行をしてもらう
-if [ "`whoami`" != "root" ]; then
+if [ "$(whoami)" != "root" ]; then
   echo "Permission denied"
   exit 1
 fi
@@ -26,7 +26,11 @@ systemctl start docker
 
 sleep 1
 
-USER=${logname}
+USER=$(logname)
+if [ -z "$USER" ]; then
+  echo "Cannot detect login user"
+  exit 1
+fi
 
 usermod -aG docker ${USER}
 
