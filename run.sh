@@ -58,8 +58,8 @@ echo "Detected login user: $USER"
 # Add user to docker group
 echo "Adding $USER to the docker group..."
 usermod -aG docker "$USER"
-echo "$USER has been added to the docker group. Re-login is required to apply group changes."
+echo "$USER has been added to the docker group."
 
-# Switch to the user shell (optional)
-echo "Switching to $USER shell..."
-exec su -l "$USER"
+# Activate new group in current shell
+echo "Activating docker group in current shell..."
+exec newgrp docker
