@@ -7,8 +7,6 @@ Requires=multi-user.target server-cgroup.service
 [Service]
 User=<USER>
 WorkingDirectory=<WORKING_DIR>
-# Check for updates before starting
-ExecStartPre=/usr/local/bin/server-manager-updater
 ExecStart=/usr/local/bin/server-manager
 Environment=TZ=Asia/Tokyo
 Restart=on-failure

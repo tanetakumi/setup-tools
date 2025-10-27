@@ -38,7 +38,6 @@ DOWNLOAD_FILES=(
     "server-start.service"
     "server-reboot.service"
     "server-reboot.timer"
-    "server-manager-updater"
 )
 
 print_info() {
@@ -230,24 +229,6 @@ install_binary() {
     print_info "Installed server-manager to $dest_binary"
 }
 
-install_updater() {
-    local source_updater="$SCRIPT_DIR/server-manager-updater"
-    local dest_updater="/usr/local/bin/server-manager-updater"
-
-    print_info "Installing server-manager-updater script..."
-
-    if [ ! -f "$source_updater" ]; then
-        print_warn "Updater script not found at $source_updater, attempting to download..."
-        if ! download_file_from_github "server-manager-updater"; then
-            print_warn "Failed to download updater script, skipping..."
-            return 0
-        fi
-    fi
-
-    cp "$source_updater" "$dest_updater"
-    chmod 755 "$dest_updater"
-    print_info "Installed server-manager-updater to $dest_updater"
-}
 
 setup_timezone() {
     print_info "Setting up timezone..."
@@ -395,12 +376,6 @@ uninstall_services() {
         print_info "Removed server-manager binary"
     fi
 
-    # Remove updater
-    if [ -f "/usr/local/bin/server-manager-updater" ]; then
-        rm "/usr/local/bin/server-manager-updater"
-        print_info "Removed server-manager-updater script"
-    fi
-
     print_info "Uninstallation complete"
 }
 
@@ -455,7 +430,6 @@ main() {
 
     check_binary
     install_binary
-    install_updater
     setup_timezone
     setup_sudo_permissions
     disable_ipv6_ufw
