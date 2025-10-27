@@ -115,13 +115,12 @@ configure_user_and_group() {
 configure_working_directory() {
     # Get the directory where the script was invoked from (not where it's located)
     local current_dir="${PWD}"
-    local suggested_dir="${current_dir}/server-manager"
 
     print_info "Current directory: ${current_dir}"
-    print_info "Suggested working directory: ${suggested_dir}"
+    print_info "Suggested working directory: ${current_dir}"
 
-    if ask_yes_no "Use '${suggested_dir}' as the working directory?"; then
-        WORKING_DIR="$suggested_dir"
+    if ask_yes_no "Use '${current_dir}' as the working directory?"; then
+        WORKING_DIR="$current_dir"
         print_info "Using working directory: ${WORKING_DIR}"
     else
         read -p "$(echo -e "${YELLOW}Enter working directory (absolute path):${NC} ")" WORKING_DIR
