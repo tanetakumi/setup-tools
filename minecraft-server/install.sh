@@ -353,12 +353,13 @@ uninstall_services() {
     # Stop services
     for service_file in "${SERVICE_FILES[@]}"; do
         if systemctl is-active --quiet "${service_file%%.*}"; then
-            systemctl stop "$service_file"
+            systemctl stop "$service_file" 2>/dev/null || true
             print_info "Stopped $service_file"
         fi
 
+        # Try to disable, but suppress errors for services without [Install] section
         if systemctl is-enabled --quiet "${service_file%%.*}" 2>/dev/null; then
-            systemctl disable "$service_file"
+            systemctl disable "$service_file" 2>/dev/null || true
             print_info "Disabled $service_file"
         fi
 
