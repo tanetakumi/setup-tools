@@ -1,0 +1,9 @@
+[Unit]
+Description=Scheduled server shutdown (triggered by timer)
+After=server-start.service
+
+[Service]
+User=<USER>
+Type=oneshot
+ExecStart=/bin/sh -c '/usr/bin/curl --max-time 600 -X POST http://localhost:5001/shutdown && sudo shutdown -h now'
+Restart=no

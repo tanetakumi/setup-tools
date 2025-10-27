@@ -1,0 +1,9 @@
+[Unit]
+Description=Timer for reboot the server
+
+[Timer]
+OnCalendar=*-*-* 12:00
+Unit=server-reboot.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,21 @@
+[Unit]
+Description=Setup cgroup for server resource management
+Before=server-start.service
+
+[Service]
+User=root
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/sh -c '\
+    echo "+cpu" > /sys/fs/cgroup/cgroup.subtree_control ; \
+    echo "+cpuset" > /sys/fs/cgroup/cgroup.subtree_control ; \
+    echo "+memory" > /sys/fs/cgroup/cgroup.subtree_control ; \
+    chmod o+rw /sys/fs/cgroup/cgroup.procs ; \
+    mkdir -p /sys/fs/cgroup/servers ; \
+    chown -R "<USER>:<USER>" /sys/fs/cgroup/servers ; \
+    echo "+cpu" > /sys/fs/cgroup/servers/cgroup.subtree_control ; \
+    echo "+cpuset" > /sys/fs/cgroup/servers/cgroup.subtree_control ; \
+    echo "+memory" > /sys/fs/cgroup/servers/cgroup.subtree_control'
+
+[Install]
+WantedBy=multi-user.target

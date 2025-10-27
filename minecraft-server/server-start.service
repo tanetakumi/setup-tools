@@ -1,0 +1,19 @@
+[Unit]
+Description=Minecraft Server Manager Service
+After=network-online.target multi-user.target server-cgroup.service
+Wants=network-online.target
+Requires=multi-user.target server-cgroup.service
+
+[Service]
+User=<USER>
+WorkingDirectory=<WORKING_DIR>
+# Check for updates before starting
+ExecStartPre=/usr/local/bin/server-manager-updater
+ExecStart=/usr/local/bin/server-manager
+Environment=TZ=Asia/Tokyo
+Restart=on-failure
+RestartSec=5s
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
