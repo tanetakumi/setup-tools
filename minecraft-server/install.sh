@@ -18,7 +18,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SYSTEMD_DIR="/etc/systemd/system"
 GITHUB_REPO="tanetakumi/setup-tools"
 GITHUB_RAW_BASE="https://raw.githubusercontent.com/${GITHUB_REPO}/main/minecraft-server"
-GITHUB_RELEASE_API="https://api.github.com/repos/${GITHUB_REPO}/releases/latest"
 
 # Variables to be set interactively
 CURRENT_USER=""
@@ -156,26 +155,15 @@ download_file_from_github() {
     return 0
 }
 
-download_binary_from_release() {
+download_binary_from_github() {
     local binary_name="server-manager"
     local dest_path="$SCRIPT_DIR/${binary_name}"
+    local url="${GITHUB_RAW_BASE}/${binary_name}"
 
-    print_info "Fetching latest release information from GitHub..."
+    print_info "Downloading ${binary_name} from GitHub..."
 
-    # Get download URL from latest release
-    local download_url=$(curl -fsSL --connect-timeout 10 --max-time 30 "$GITHUB_RELEASE_API" | \
-        grep -Po '"browser_download_url": "\K.*?server-manager(?=")' | head -1)
-
-    if [ -z "$download_url" ]; then
-        print_error "Failed to find server-manager binary in latest release"
-        print_info "Please manually download the binary from GitHub Releases"
-        return 1
-    fi
-
-    print_info "Downloading ${binary_name} from ${download_url}..."
-
-    if ! curl -fsSL --connect-timeout 10 --max-time 300 "$download_url" -o "$dest_path"; then
-        print_error "Failed to download ${binary_name}"
+    if ! curl -fsSL --connect-timeout 10 --max-time 300 "$url" -o "$dest_path"; then
+        print_error "Failed to download ${binary_name} from ${url}"
         return 1
     fi
 
@@ -208,7 +196,7 @@ download_required_files() {
     if [ -f "$binary_path" ] && [ "$force_download" = false ]; then
         print_info "server-manager binary already exists, skipping download"
     else
-        if ! download_binary_from_release; then
+        if ! download_binary_from_github; then
             print_error "Failed to download server-manager binary"
             exit 1
         fi
@@ -220,7 +208,7 @@ check_binary() {
     if [ ! -f "$binary_path" ]; then
         print_error "server-manager binary not found at $binary_path"
         print_info "Attempting to download from GitHub..."
-        if ! download_binary_from_release; then
+        if ! download_binary_from_github; then
             print_error "Failed to download binary. Please check your internet connection."
             exit 1
         fi
