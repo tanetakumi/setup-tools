@@ -60,6 +60,18 @@ echo "Adding $USER to the docker group..."
 usermod -aG docker "$USER"
 echo "$USER has been added to the docker group."
 
-# Activate new group in current shell
-echo "Activating docker group in current shell..."
-exec newgrp docker
+# Instructions for activating docker group
+echo ""
+echo "========================================="
+echo "Docker installation completed!"
+echo "========================================="
+echo ""
+echo "IMPORTANT: To use Docker without sudo, you need to activate the group membership."
+echo "Please run ONE of the following commands:"
+echo ""
+echo "  1. Log out and log back in (recommended)"
+echo "  2. Run: newgrp docker"
+echo "  3. Run: sudo -u $USER -i"
+echo ""
+echo "After that, you can run 'docker ps' without sudo."
+echo "========================================="
